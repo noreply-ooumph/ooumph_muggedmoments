@@ -2,9 +2,6 @@ name: Login & Save Session
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/login.yml', 'do_login.py']
 
 jobs:
   login:
