@@ -1,0 +1,27 @@
+name: Weekly Health Check
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'
+  workflow_dispatch:
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify Graph API token
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://graph.facebook.com/v21.0/me?access_token=${{ secrets.GRAPH_PAGE_TOKEN }}")
+          if [ "$STATUS" = "200" ]; then
+            echo "GRAPH_PAGE_TOKEN valid — OK"
+          else
+            echo "ERROR: token returned HTTP $STATUS — update GRAPH_PAGE_TOKEN secret"
+            exit 1
+          fi
+      - name: Verify GROQ_API_KEY
+        run: |
+          [ -z "${{ secrets.GROQ_API_KEY }}" ] && echo "ERROR: GROQ_API_KEY not set" && exit 1
+          echo "GROQ_API_KEY set — OK"
+      - run: echo "bharat.vistas health check complete — fully operational"

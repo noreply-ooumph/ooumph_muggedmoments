@@ -1,0 +1,55 @@
+name: Login & Save Session
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/login.yml', 'do_login.py']
+
+jobs:
+  login:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install instagrapi python-dotenv --quiet
+
+      - name: Login and save session
+        env:
+          IG_USERNAME: ${{ secrets.IG_USERNAME }}
+          IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
+        run: python do_login.py
+
+      - name: Commit session to repo
+        run: |
+          git config user.name  "gurukul-bot"
+          git config user.email "bot@ooumph.com"
+          git add -f ig_settings.json
+          git diff --cached --quiet || git commit -m "bot: refresh session [skip ci]"
+          git push || true
+
+      - name: Update GitHub secret
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          gh secret set IG_SETTINGS_JSON --repo ${{ github.repository }} < ig_settings.json
+          echo "Secret updated"
+
+      - name: Restart replier after login refresh
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          sleep 5
+          gh workflow run replier.yml --repo ${{ github.repository }} || true
+          echo "Replier restarted"
