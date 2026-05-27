@@ -31,7 +31,9 @@ GRAPH_IG_USER_ID=%s
           git config user.email "bot@ooumph.com"
           git add -f generated_images/pending_post.jpg pending_post.json
           git diff --cached --quiet || git commit -m "bot: pending post image [skip ci]"
+          git stash 2>/dev/null || true
           git pull --rebase origin main || true
+          git stash pop 2>/dev/null || true
           git push || true
       - name: Wait for GitHub CDN
         run: sleep 20
@@ -43,5 +45,7 @@ GRAPH_IG_USER_ID=%s
           git config user.email "bot@ooumph.com"
           git add -f posted_content.json brain_memory.json content_plan.json posts_list.json
           git diff --cached --quiet || git commit -m "bot: post published [skip ci]"
+          git stash 2>/dev/null || true
           git pull --rebase origin main || true
+          git stash pop 2>/dev/null || true
           git push || true
