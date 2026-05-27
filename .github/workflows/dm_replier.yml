@@ -1,0 +1,50 @@
+name: DM Auto-Replier
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+jobs:
+  dm-reply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install groq python-dotenv requests --quiet
+
+      - name: Write .env
+        run: |
+          cat > .env <<'ENVEOF'
+          GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}
+          GRAPH_PAGE_TOKEN=${{ secrets.GRAPH_PAGE_TOKEN }}
+          GRAPH_IG_USER_ID=${{ secrets.GRAPH_IG_USER_ID }}
+          GH_PAT=${{ secrets.GH_PAT }}
+          ACCOUNT_NAME=${{ vars.ACCOUNT_NAME }}
+          ENVEOF
+
+      - name: Run DM Replier
+        run: python dm_replier.py
+
+      - name: Commit state
+        run: |
+          git config user.name "ooumph-bot"
+          git config user.email "bot@ooumph.com"
+          git add -f replied_dms.json
+          git diff --cached --quiet || git commit -m "bot: update replied_dms state [skip ci]"
+          git stash 2>/dev/null || true
+          git pull --rebase origin main || true
+          git stash pop 2>/dev/null || true
+          git push || true
