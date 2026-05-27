@@ -33,7 +33,7 @@ jobs:
           GRAPH_IG_USER_ID=${{ secrets.GRAPH_IG_USER_ID }}
           GH_PAT=${{ secrets.GH_PAT }}
           ACCOUNT_NAME=${{ vars.ACCOUNT_NAME }}
-          ENVEOF
+ENVEOF
 
       - name: Run DM Replier
         run: python dm_replier.py
