@@ -35,7 +35,7 @@ jobs:
           ACCOUNT_NAME=${{ vars.ACCOUNT_NAME }}
           SMTP_USER=${{ secrets.SMTP_USER }}
           SMTP_PASS=${{ secrets.SMTP_PASS }}
-          ENVEOF
+ENVEOF
 
       - name: Run Analytics Reporter
         run: python analytics_reporter.py
