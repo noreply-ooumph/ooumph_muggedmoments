@@ -34,7 +34,7 @@ jobs:
           GH_PAT=${{ secrets.GH_PAT }}
           ACCOUNT_NAME=${{ vars.ACCOUNT_NAME }}
           IG_USERNAME=${{ vars.IG_USERNAME }}
-          ENVEOF
+ENVEOF
 
       - name: Run Content Recycler
         run: python content_recycler.py
