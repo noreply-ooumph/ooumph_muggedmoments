@@ -2,7 +2,7 @@
 Graph API poster — two steps:
   python graph_poster.py --step generate   → create image + save pending_post.json
   python graph_poster.py --step publish    → post to Instagram via Graph API
-# muggedmoments
+# thegurukul.online
 """
 import sys, os, json, time, argparse, requests
 sys.path.insert(0, os.path.dirname(__file__))
@@ -20,8 +20,8 @@ from ig_brain.image_gen_pending import generate_pending_image
 
 GRAPH_BASE  = "https://graph.facebook.com/v21.0"
 PAGE_TOKEN  = os.environ.get("GRAPH_PAGE_TOKEN", "")
-IG_USER_ID  = os.environ.get("GRAPH_IG_USER_ID", "17841465525733184")
-REPO_RAW    = "https://raw.githubusercontent.com/noreply-ooumph/ooumph_muggedmoments/main"
+IG_USER_ID  = os.environ.get("GRAPH_IG_USER_ID", "17841467149837324")
+REPO_RAW    = "https://raw.githubusercontent.com/noreply-ooumph/Ooumph_Gurukul/main"
 PENDING_FILE = Path(__file__).parent / "pending_post.json"
 
 client = GroqClientWrapper(api_key=GROQ_KEY)
