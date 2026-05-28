@@ -56,7 +56,7 @@ def maybe_evolve(client, force: bool = False) -> str:
         model="llama-3.3-70b-versatile",
         max_tokens=500,
         system=(
-            f"You are a growth strategist for muggedmoments, a coffee culture and aesthetic lifestyle Instagram.\n"
+            f"You are a growth strategist for thegurukul.online, an Indian education and ancient wisdom Instagram.\n"
             f"Niche: {ACCOUNT_NICHE}\nContent pillars:\n{pillars}\n\n"
             "Based on real engagement data, write a precise 3-5 bullet strategy. "
             "Be specific: name content formats, hooks, topics that work best. "
@@ -90,13 +90,13 @@ def generate_content(client) -> dict:
         model="llama-3.3-70b-versatile",
         max_tokens=1200,
         system=(
-            f"You are the content brain for muggedmoments — a coffee culture and aesthetic lifestyle Instagram page.\n"
+            f"You are the content brain for thegurukul.online — an Indian education and ancient wisdom Instagram page.\n"
             f"Today is {today}. Niche: {ACCOUNT_NICHE}\n\n"
             "Generate ONE complete Instagram post. Rules:\n"
-            "- Topic must feel current and relevant to coffee, lifestyle, and cozy aesthetic world right now\n"
+            "- Topic must feel current and relevant to education, self-growth, and Indian wisdom world right now\n"
             "- Caption: 150-200 words. Punchy first line (hook). Build to a strong CTA. No hashtags. No filler.\n"
-            "- Tone: cozy coffee enthusiast — warm, grounded, inspiring. Real, not corporate.\n"
-            "- image_prompt: 2 sentences for FLUX AI image gen. Warm moody coffee photography aesthetic -- steam, bokeh, cozy tones. No text in image.\n"
+            "- Tone: wise mentor — warm, grounded, inspiring. Real, not corporate.\n"
+            "- image_prompt: 2 sentences for FLUX AI image gen. Cinematic warm golden-light Indian wisdom aesthetic. No text in image.\n"
             "- hashtags: exactly 20 relevant tags as a JSON array of strings\n\n"
             "Return ONLY valid JSON: {topic, pillar, caption, image_prompt, hashtags}"
         ),
