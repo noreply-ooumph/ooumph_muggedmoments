@@ -13,7 +13,7 @@ def load_memory() -> dict:
         "total_posts": 0,
         "total_comments_replied": 0,
         "top_performing_topics": [],
-        "strategy_notes": "Post warm, aesthetic coffee and mug content — focus on cozy morning setups, latte art close-ups, and lifestyle moments that make followers feel the warmth.",
+        "strategy_notes": "Post content that blends ancient Indian wisdom with modern education — motivational, insightful, visually compelling.",
         "evolution_log": [],
         "last_evolved": None,
     }
@@ -58,8 +58,7 @@ def evolve_strategy(client) -> str:
         return mem["strategy_notes"]
 
     recent = sorted(posts, key=lambda x: x.get("likes", 0) + x.get("comments", 0) * 3, reverse=True)[:10]
-    summary = "
-".join([
+    summary = "\n".join([
         f"- Topic: {p['topic']} | Likes: {p['likes']} | Comments: {p['comments']}"
         for p in recent
     ])
@@ -68,21 +67,16 @@ def evolve_strategy(client) -> str:
         model="claude-haiku-4-5-20251001",
         max_tokens=400,
         system=(
-            "You are an Instagram growth strategist for muggedmoments, a coffee culture and aesthetic lifestyle account. "
+            "You are an Instagram growth strategist for thegurukul.online, an education and wisdom account. "
             "Analyze post performance and write an updated strategy in 3-5 bullet points. "
             "Focus on topics, formats, and hooks that drive most engagement."
         ),
-        messages=[{"role": "user", "content": f"Recent performance:
-{summary}
-
-Write updated strategy:"}]
+        messages=[{"role": "user", "content": f"Recent performance:\n{summary}\n\nWrite updated strategy:"}]
     )
     new_strategy = resp.content[0].text.strip()
     mem["strategy_notes"] = new_strategy
     mem["last_evolved"] = datetime.now().isoformat()
     mem["evolution_log"].append({"date": datetime.now().isoformat()[:10], "strategy": new_strategy})
     save_memory(mem)
-    print(f"[EVOLVER] Strategy updated:
-{new_strategy}
-")
+    print(f"[EVOLVER] Strategy updated:\n{new_strategy}\n")
     return new_strategy
