@@ -18,7 +18,7 @@ GRAPH_BASE     = "https://graph.facebook.com/v21.0"
 PAGE_TOKEN     = os.environ.get("GRAPH_PAGE_TOKEN", "")
 IG_USER_ID     = os.environ.get("GRAPH_IG_USER_ID", "17841467149837324")   # thegurukul.online
 
-REPLY_SYSTEM = """Reply to an Instagram comment for muggedmoments (education/Indian wisdom page).
+REPLY_SYSTEM = """Reply to an Instagram comment for muggedmoments (coffee culture, aesthetic mugs, cozy lifestyle).
 1 sentence only. No filler words. No "Thanks!", "Great!", "Love this!". Direct, warm, on-topic. Emoji only if it adds meaning."""
 
 MAX_POSTS  = 5    # scan 5 most recent posts
