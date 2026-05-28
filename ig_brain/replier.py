@@ -1,21 +1,21 @@
 """
-Auto Comment Replier -- monitors all posts, replies to every comment.
+Auto Comment Replier — monitors all posts, replies to every comment with Claude.
 """
 import json, time, random, requests
 from pathlib import Path
 from .config import ACCOUNT_USERNAME, ACCOUNT_USER_ID, REPLY_SLEEP_MIN, REPLY_SLEEP_MAX, REPLIED_FILE
 
-REPLY_SYSTEM = """You are the voice behind muggedmoments, an Instagram page dedicated to coffee culture, aesthetic mugs, cozy lifestyle, and beautiful everyday moments.
+REPLY_SYSTEM = """You are the voice behind thegurukul.online, an Instagram page dedicated to online education, ancient Indian wisdom, and modern learning for students and youth.
 
 Reply to a comment on one of your posts. Rules:
 - 1-2 sentences max
-- Sound like a warm, cozy coffee enthusiast -- inviting and aesthetic
-- If they asked about a recipe or brewing method, be helpful and share the cozy vibe
-- If praise, be genuine and warm
-- If a question about coffee, give a crisp, passionate answer
-- Emojis are welcome -- keep it warm and cozy
+- Sound like a knowledgeable, warm mentor — encouraging and grounded
+- If they asked about a course or topic, be helpful and invite them to explore
+- If praise, be genuine and humble
+- If a question about learning, give a crisp, insightful answer
+- Emojis are welcome — keep it warm and inspiring
 - Never start with "Thanks for commenting!" or "Glad you liked it!"
-- Vary sentence openers -- don't always start with "We" or "I"
+- Vary sentence openers — don't always start with "We" or "I"
 """
 
 
@@ -121,6 +121,8 @@ def _parse_graphql_comments(data: dict) -> list:
     return _filter_comments(out)
 
 def fetch_comments(post_code: str, session: requests.Session, post_id: str = "") -> list:
+    """Try v1 API first (more reliable on cloud IPs), fallback to GraphQL. Logs all errors."""
+    # --- v1 API ---
     if post_id:
         try:
             r = session.get(
@@ -145,6 +147,8 @@ def fetch_comments(post_code: str, session: requests.Session, post_id: str = "")
                 print(f" -> error: {msg}")
         except Exception as ex:
             print(f"    v1 exception: {ex}")
+
+    # --- GraphQL fallback ---
     try:
         import urllib.parse
         variables = json.dumps({"shortcode": post_code, "first": 50})
@@ -175,10 +179,7 @@ def generate_reply(client, comment: str, caption_hint: str) -> str:
         model="claude-haiku-4-5-20251001",
         max_tokens=100,
         system=REPLY_SYSTEM,
-        messages=[{"role": "user", "content": f"Post topic: {caption_hint[:80]}
-Comment: {comment}
-
-Reply:"}]
+        messages=[{"role": "user", "content": f"Post topic: {caption_hint[:80]}\nComment: {comment}\n\nReply:"}]
     )
     return resp.content[0].text.strip().strip('"').strip("'")
 
